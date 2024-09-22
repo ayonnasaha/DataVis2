@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+
+        <script src="vega_lite_vis.js"></script>
+
+        <title>Migrant Population </title>
+    </head>
+
+    <body>
+        <h1>Percentage Migrant Population</h1>
+        <div id="choropleth"></div>
+        <script type="text/javascript">
+          
+        const spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Migrant Population by State",
+            "width": 600,
+            "height": 400,
+            "projection": {"type": "mercator"},
+            "data": {
+            "url": "https://raw.githubusercontent.com/ayonnasaha/DataVis2/refs/heads/main/STE_2021_AUST_GDA2020.json",
+            "format": {"type": "topojson", "feature": "STE_2021_AUST_GDA2020"}
+            },
+            "transform": [
+            {
+                "lookup": "properties.STE_NAME21",
+                "from": {
+                "data": {
+                    "url": "https://raw.githubusercontent.com/ayonnasaha/DataVis2/refs/heads/main/Graph%202.1%20migrant%20population%20by%20state%20cleaned.csv"
+                },
+                "key": "Name",
+                "fields": ["2021"]
+                }
+            }
+            ],
+            "mark": {"type": "geoshape"},
+            "encoding": {
+            "color": {
+                "field": "2021",
+                "type": "quantitative",
+                "scale": {
+                    "type": "threshold",
+                    "domain":[20,25,30],
+                    "range": ["#ddf07f", "#a1dab4", "#41b6c4", "#225ea8"]
+                },
+                "legend":{"title": "% Migrant population in 2021"}
+            },
+            "tooltip": [
+                {"field": "properties.STE_NAME21", "type": "nominal", "title": "State"},
+                {"field": "2021", "type": "quantitative", "title":"Migrant population(%)"}
+            ]
+
+            } 
+        }
+        vegaEmbed('#choropleth', spec).then(function(result) {
+            // Handle success
+        }).catch(console.error);
+        </script>
+
+    </body>
+</html>
